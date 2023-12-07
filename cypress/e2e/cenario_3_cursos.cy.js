@@ -1,5 +1,5 @@
-describe('Teste de Login no site da Alura', () => {
-  it('Deve fazer login com sucesso', () => {
+describe('Cenário 3: Realiazar a edição do perfil', () => {
+  it('Deve testar a funcionalidade meus cursos', () => {
     // Visite a página home
     cy.visit('https://www.alura.com.br/');
 
@@ -19,8 +19,12 @@ describe('Teste de Login no site da Alura', () => {
     // Verifique se foi direcionado para a tela de formações
     cy.url().should('include', '/dashboard');
 
-    // Verifique se o nome do usuário está correto após o login
-    cy.get('.navigation__item-name').should('contain', 'Ana'); 
-  });
+    // Clique no botão de cursos
+    cy.get('.menu__toggle-btn').click();
+    cy.contains('button.navigation__item-name', 'Estudar').click();
+    cy.contains('a.subitem__link', 'Meus Cursos').click();
 
+    // Como não tenho acesso, vou verificar se aparece uma mensagem
+    cy.get('.empty-title').should('contain', 'Parece que você ainda não iniciou nenhum curso'); 
+  });
 });

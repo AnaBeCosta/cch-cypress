@@ -1,36 +1,43 @@
-describe('Cenário 2: Catálogo de Produtos e Funcionalidade de Busca', () => {
-  it('Deve verificar o catálogo de produtos e a funcionalidade de busca', () => {
-    // Visita a página de login
-    cy.visit('https://www.saucedemo.com/');
+describe('Cenário 2: Catálogo de Cursos e Funcionalidade de Busca', () => {
+  it('Deve verificar o catálogo de cursos e a funcionalidade de busca', () => {
+    // Visite a página home
+    cy.visit('https://www.alura.com.br/');
 
-    // Insere o nome de usuário e senha nos campos de login
-    cy.get('#user-name').type('standard_user');
-    cy.get('#password').type('secret_sauce');
+    // Visite a página de login
+    cy.get('.header__nav--ctas-entrar').click();
 
-    // Clica no botão de login
-    cy.get('#login-button').click();
+    // Verifica se foi direcionado para a tela de login
+    cy.url().should('include', '/loginForm?urlAfterLogin=https://cursos.alura.com.br/dashboard');
 
-    // Verifica se o login foi bem-sucedido redirecionando para a página de produtos
-    cy.url().should('include', '/inventory.html');
+    // Insira o nome de usuário e senha nos campos de login
+    cy.get('#login-email').type('anacost.a@outlook.com');
+    cy.get('#password').type('TesteCypress1*');
 
-    // Verifica se a página de produtos está carregada corretamente
-    cy.get('.inventory_list .inventory_item').should('have.length.greaterThan', 0);
+    // Clique no botão de login
+    cy.get('.btn-login').click();
 
-    // Verifica as informações dos produtos
-    cy.get('.inventory_list .inventory_item').each(($product) => {
-      const productName = $product.find('.inventory_item_name').text().trim();
-      const productPrice = $product.find('.inventory_item_price').text().trim();
+    // Verifique se foi direcionado para a tela de formações
+    cy.url().should('include', '/dashboard');
 
-      // Verifica se o nome do produto não está vazio
-      expect(productName).to.not.be.empty;
+    // Clique no botão de login
+    cy.get('a.categoryExplorer-category-link[href="/category/programacao"]').click();
 
-      // Verifica se o preço está no formato correto (ex: $X.XX)
-      expect(productPrice).to.match(/^\$\d+\.\d{2}$/);
-    });
+    // Verifica se o atributo src não está vazio
+    cy.get('.course-card__icon').should('have.attr', 'src').and('not.be.empty'); 
 
-    // Verifica se os resultados da busca são consistentes e corretos
-    cy.get('.inventory_list .inventory_item').each(($product) => {
-      const productName = $product.find('.inventory_item_name').text().trim().toLowerCase();
-    });
+    // Verifique se o nome não está vazio
+    cy.get('.course-card__name').should('not.be.empty'); 
+
+    // Clique no botão de busca
+    cy.get('.headerBusca-icon').click();
+  
+    // Insira o termo de busca no campo
+    cy.get('#headerBusca-campoBusca').type('Java') 
+
+    // Pressiona a tecla Enter para realizar a busca 
+    cy.get('#headerBusca-campoBusca').type('{enter}')
+
+    //Verificar se a URL mudou após a busca para confirmar que uma busca foi feita
+    cy.url().should('include', `/search?query=Java`)
   });
 });
